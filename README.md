@@ -40,11 +40,11 @@ The Weather Dashboard application allows users to:
 
 - Search for and select two locations to compare their weather forecasts.
 - Display the current weather conditions and a 5-day forecast for both locations side by side.
-- Implement a comparison view that highlights differences in temperature, precipitation, wind speed, and other relevant weather conditions.
+- Highlights differences in temperature, precipitation, wind speed, and other relevant weather conditions.
 
 ## Technology Stack
 
-The project is built using Vue.js framework. Vue.js was chosen for its simplicity, reactivity, and ease of integration with APIs. The Vue ecosystem provides excellent tools for building responsive and interactive web applications, making it a suitable choice for this project.
+The project is built using Vue.js framework. Vue.js was chosen for its simplicity, reactivity, and ease of integration with APIs. The Vue ecosystem provides excellent tools for building responsive and interactive web applications, making it a suitable choice for this project to be hosted on GitHub pages.
 
 ## Unique Comparison Mode Feature
 
