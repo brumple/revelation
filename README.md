@@ -34,6 +34,19 @@ To run this application locally, follow these steps:
 
 5. Open your web browser and visit `http://localhost:8080` to view the application.
 
+## How to Use the Application
+
+The Weather Dashboard application allows users to compare the weather forecast between two locations. Here's how to use it:
+
+1. Upon loading the application, you'll see an interface to input two locations for comparison.
+2. Enter the details of the two locations you want to compare. You can input locations by city name, ZIP code, or coordinates.
+3. After entering the locations, the application will fetch the weather forecasts for both locations.
+4. Select the specific location from the provided choices for each of the two locations.
+5. The application will then display the current weather conditions and a 5-day forecast for both locations side by side.
+6. Differences in temperature, precipitation, wind speed, and other relevant weather conditions between the two locations will be highlighted:
+   - Differences greater than 5% will be highlighted in orange.
+   - Differences greater than 10% will be highlighted in red.
+
 ## Project Overview
 
 The Weather Dashboard application allows users to:
