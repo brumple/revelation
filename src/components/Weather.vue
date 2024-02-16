@@ -1,87 +1,113 @@
 <template>
   <div class="weather-comparison">
-    <div>
-      <h1>Weather Comparison</h1>
+    <div class="container">
+      <div class="side-by-side">
+        <h1>Weather Comparison</h1>
 
-      <!-- Legend section -->
-      <div class="legend">
-        <div class="legend-item">
-          <span class="legend-color orange"></span>
-          <span>Greater than 5% difference</span>
-        </div>
-        <div class="legend-item">
-          <span class="legend-color red"></span>
-          <span>Greater than 10% difference</span>
+        <div class="legend">
+          <div class="legend-item">
+            <span class="legend-color orange"></span>
+            <span>Greater than 5% difference</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-color red"></span>
+            <span>Greater than 10% difference</span>
+          </div>
         </div>
       </div>
-    </div>
 
 
-    <div class="location-column">
-      <h2>Location 1</h2>
-      <label for="location1">Search Location 1:</label>
-      <input type="text" id="location1" v-model="searchTerm1" @input="searchLocations(1)" placeholder="Enter city, ZIP code, or coordinates" />
-      <div v-if="searchResults1.length > 0">
-        <ul>
-          <li v-for="result in searchResults1" :key="result.id" @click="selectLocation(result, 1)">
-            {{ result.name }}, {{ result.admin1 }}, {{ result.country }}
-          </li>
-        </ul>
+      <div class="side-by-side">
+        <div class="location-column">
+          <h2>Location 1</h2>
+          <label for="location1">Search Location 1:</label>
+          <input type="text" id="location1" v-model="searchTerm1" @input="searchLocations(1)" placeholder="Enter city, ZIP code, or coordinates" />
+          <div v-if="searchResults1.length > 0">
+            <select @change="selectLocation($event.target.value, 1)">
+              <option value="">Select a location</option>
+              <option v-for="result in searchResults1" :key="result.id" :value="result.id">
+                {{ result.name }}, {{ result.admin1 }}, {{ result.country }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+
+        <div class="location-column">
+          <h2>Location 2</h2>
+          <label for="location2">Search Location 2:</label>
+          <input type="text" id="location2" v-model="searchTerm2" @input="searchLocations(2)" placeholder="Enter city, ZIP code, or coordinates" />
+          <div v-if="searchResults2.length > 0">
+            <select @change="selectLocation($event.target.value, 2)">
+              <option value="">Select a location</option>
+              <option v-for="result in searchResults2" :key="result.id" :value="result.id">
+                {{ result.name }}, {{ result.admin1 }}, {{ result.country }}
+              </option>
+            </select>
+          </div>
+        </div>
       </div>
-      <div v-if="selectedLocation1">
-        <h3>{{ selectedLocation1.name }}, {{ selectedLocation1.admin1 }}, {{ selectedLocation1.country }}</h3>
-        <p>Latitude: {{ selectedLocation1.latitude }}</p>
-        <p>Longitude: {{ selectedLocation1.longitude }}</p>
-        <div v-if="selectedLocation1Weather">
-          <h4>Weather Forecast</h4>
-          <div v-for="(day, index) in selectedLocation1Weather" :key="index">
-            <h5>Day {{ index + 1 }}</h5>
-            <p>Date: {{ day.time }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'temperature_2m_max') }">Temperature Max: {{ day.temperature_2m_max }}°F</p>
-            <p :style="{ color: getDifferenceColor(index, 'temperature_2m_min') }">Temperature Min: {{ day.temperature_2m_min }}°F</p>
-            <p :style="{ color: getDifferenceColor(index, 'sunrise') }">Sunrise: {{ day.sunrise }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'sunset') }">Sunset: {{ day.sunset }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'precipitation_sum') }">Precipitation: {{ day.precipitation_sum }}mm</p>
-            <p :style="{ color: getDifferenceColor(index, 'precipitation_probability_max') }">Precipitation Probability: {{ day.precipitation_probability_max }}%</p>
-            <p :style="{ color: getDifferenceColor(index, 'wind_speed_10m_max') }">Wind Speed Max: {{ day.wind_speed_10m_max }}m/s</p>
+
+      <div class="full-width" v-if="selectedLocation1 && selectedLocation2">
+        <div class="header">
+          <div class="column">
+            <h3>{{ selectedLocation1.name }}, {{ selectedLocation1.admin1 }}, {{ selectedLocation1.country }}</h3>
+            <p>Latitude: {{ selectedLocation1.latitude }}</p>
+            <p>Longitude: {{ selectedLocation1.longitude }}</p>
+          </div>
+          <div class="column"><h3>Weather Forecast</h3></div>
+          <div class="column">
+            <h3>{{ selectedLocation2.name }}, {{ selectedLocation2.admin2 }}, {{ selectedLocation2.country }}</h3>
+            <p>Latitude: {{ selectedLocation2.latitude }}</p>
+            <p>Longitude: {{ selectedLocation2.longitude }}</p>
+          </div>
+        </div>
+        <div v-if="selectedLocation1Weather && selectedLocation2Weather">
+          <div v-for="(day, index) in selectedLocation1Weather" :key="index" style="margin-bottom: 50px;">
+            <div class="row" style="background: aqua">
+              <div class="cell">{{ day.time }}</div>
+              <div class="cell">Date</div>
+              <div class="cell">{{ day.time }}</div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_max') }">{{ day.temperature_2m_max }}°F</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_max') }">Temperature Max</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_max') }">{{ selectedLocation2Weather[index].temperature_2m_max }}°F</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_min') }">{{ day.temperature_2m_min }}°F</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_min') }">Temperature Min</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'temperature_2m_min') }">{{ selectedLocation2Weather[index].temperature_2m_min }}°F</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunrise') }">{{ day.sunrise }}</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunrise') }">Sunrise</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunrise') }">{{ selectedLocation2Weather[index].sunrise }}</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunset') }">{{ day.sunset }}</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunset') }">Sunset</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'sunset') }">{{ selectedLocation2Weather[index].sunset }}</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_sum') }">{{ day.precipitation_sum }}mm</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_sum') }">Precipitation</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_sum') }">{{ selectedLocation2Weather[index].precipitation_sum }}mm</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_probability_max') }">{{ day.precipitation_probability_max }}%</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_probability_max') }">Precipitation Probability</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'precipitation_probability_max') }">{{ selectedLocation2Weather[index].precipitation_probability_max }}%</p></div>
+            </div>
+            <div class="row">
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'wind_speed_10m_max') }">{{ day.wind_speed_10m_max }}m/s</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'wind_speed_10m_max') }">Wind Max Speed</p></div>
+              <div class="cell"><p :style="{ color: getDifferenceColor(index, 'wind_speed_10m_max') }">{{ selectedLocation2Weather[index].wind_speed_10m_max }}m/s</p></div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div class="location-column">
-      <h2>Location 2</h2>
-      <label for="location2">Search Location 2:</label>
-      <input type="text" id="location2" v-model="searchTerm2" @input="searchLocations(2)" placeholder="Enter city, ZIP code, or coordinates" />
-      <div v-if="searchResults2.length > 0">
-        <ul>
-          <li v-for="result in searchResults2" :key="result.id" @click="selectLocation(result, 2)">
-            {{ result.name }}, {{ result.admin1 }}, {{ result.country }}
-          </li>
-        </ul>
-      </div>
-      <div v-if="selectedLocation2">
-        <h3>{{ selectedLocation2.name }}, {{ selectedLocation2.admin1 }}, {{ selectedLocation2.country }}</h3>
-        <p>Latitude: {{ selectedLocation2.latitude }}</p>
-        <p>Longitude: {{ selectedLocation2.longitude }}</p>
-        <div v-if="selectedLocation2Weather">
-          <h4>Weather Forecast</h4>
-          <div v-for="(day, index) in selectedLocation2Weather" :key="index">
-            <h5>Day {{ index + 1 }}</h5>
-            <p>Date: {{ day.time }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'temperature_2m_max') }">Temperature Max: {{ day.temperature_2m_max }}°F</p>
-            <p :style="{ color: getDifferenceColor(index, 'temperature_2m_min') }">Temperature Min: {{ day.temperature_2m_min }}°F</p>
-            <p :style="{ color: getDifferenceColor(index, 'sunrise') }">Sunrise: {{ day.sunrise }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'sunset') }">Sunset: {{ day.sunset }}</p>
-            <p :style="{ color: getDifferenceColor(index, 'precipitation_sum') }">Precipitation: {{ day.precipitation_sum }}mm</p>
-            <p :style="{ color: getDifferenceColor(index, 'precipitation_probability_max') }">Precipitation Probability: {{ day.precipitation_probability_max }}%</p>
-            <p :style="{ color: getDifferenceColor(index, 'wind_speed_10m_max') }">Wind Speed Max: {{ day.wind_speed_10m_max }}m/s</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
   </div>
 
 
@@ -117,13 +143,17 @@ export default {
         console.error('Error searching locations:', error);
       }
     },
-    selectLocation(location, locationNumber) {
-      if (locationNumber === 1) {
-        this.selectedLocation1 = location;
-        this.fetchWeather(location.latitude, location.longitude, locationNumber);
-      } else {
-        this.selectedLocation2 = location;
-        this.fetchWeather(location.latitude, location.longitude, locationNumber);
+    selectLocation(id, locationNumber) {
+      id = parseInt(id);
+
+      if (!isNaN(id)) {
+        if (locationNumber === 1) {
+          this.selectedLocation1 = this.searchResults1.find(obj => obj.id === id);
+          this.fetchWeather(this.selectedLocation1.latitude, this.selectedLocation1.longitude, locationNumber);
+        } else {
+          this.selectedLocation2 = this.searchResults2.find(obj => obj.id === id);
+          this.fetchWeather(this.selectedLocation2.latitude, this.selectedLocation2.longitude, locationNumber);
+        }
       }
     },
     async fetchWeather(latitude, longitude, locationNumber) {
@@ -144,6 +174,7 @@ export default {
         if (locationNumber === 1) {
           this.selectedLocation1Weather = truncatedForecast;
         } else {
+          console.log(truncatedForecast)
           this.selectedLocation2Weather = truncatedForecast;
         }
       } catch (error) {
@@ -182,9 +213,36 @@ export default {
   justify-content: space-around;
 }
 
+.container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.side-by-side {
+  width: 50%; /* Two divs side by side */
+  box-sizing: border-box; /* Ensure padding and border are included in width */
+  padding: 10px; /* Optional: Add padding */
+}
+
+.full-width {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.header, .row {
+  display: flex;
+}
+
+.column, .cell {
+  flex: 1;
+  border: 1px solid black;
+  padding: 5px;
+}
+
 .location-column {
-  width: 45%;
-  margin-bottom: 20px;
+  //width: 45%;
+  //margin-bottom: 20px;
 }
 
 .legend {
